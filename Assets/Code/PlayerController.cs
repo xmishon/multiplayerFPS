@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Player
+namespace PlayerNS
 {
     [RequireComponent(typeof(ConfigurableJoint))]
     [RequireComponent(typeof(PlayerMotor))]

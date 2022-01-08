@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3228119754344837297}
   - component: {fileID: 3228119754344837303}
   - component: {fileID: 3228119754344837302}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3228119755161670922}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Graphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 3228119755176171990}
   - component: {fileID: 3228119755176171985}
   - component: {fileID: 3228119755176171984}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1159,7 +1159,7 @@ GameObject:
   - component: {fileID: 3228119755249647922}
   - component: {fileID: 3228119755249647920}
   - component: {fileID: 3228119755249647923}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1242,14 +1242,16 @@ GameObject:
   - component: {fileID: 3228119755323648909}
   - component: {fileID: 3228119755323648908}
   - component: {fileID: 3228119755323648911}
+  - component: {fileID: 2025100941105487704}
   - component: {fileID: 2241774392087196092}
   - component: {fileID: 7808002840759947792}
   - component: {fileID: -6992778936416602046}
   - component: {fileID: 9123651295177163938}
   - component: {fileID: 5030976649977531182}
-  m_Layer: 0
+  - component: {fileID: 7997154624124797826}
+  m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1331,6 +1333,26 @@ MonoBehaviour:
   _jointMode: -1
   _jointSpring: 1400
   _jointMaxForice: 3000
+--- !u!114 &2025100941105487704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3228119755323648910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f5777efa36f67942aaf27fb1dd8afc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapon:
+    name: Glock
+    damage: 40
+    range: 100
+  _camera: {fileID: 3228119754344837303}
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 183
 --- !u!114 &2241774392087196092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1381,7 +1403,9 @@ MonoBehaviour:
   - {fileID: 3228119755323648911}
   - {fileID: 3228119754344837303}
   - {fileID: 3228119754344837302}
+  - {fileID: 2025100941105487704}
   _sceneCamera: {fileID: 0}
+  _remoteLayerName: RemotePlayer
 --- !u!114 &-6992778936416602046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1436,7 +1460,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: 2, y: 3, z: 2}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 2
@@ -1520,3 +1544,20 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &7997154624124797826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3228119755323648910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1be56cc1f9992e34598f1acc14496871, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 100
+  _disabledOnDeath:
+  - {fileID: 3228119755323648911}
+  - {fileID: 2025100941105487704}
+  _wasEnabled: 
