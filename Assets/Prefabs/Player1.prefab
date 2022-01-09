@@ -1249,6 +1249,7 @@ GameObject:
   - component: {fileID: 9123651295177163938}
   - component: {fileID: 5030976649977531182}
   - component: {fileID: 7997154624124797826}
+  - component: {fileID: 8931813194119825467}
   m_Layer: 6
   m_Name: Player1
   m_TagString: Player
@@ -1406,6 +1407,9 @@ MonoBehaviour:
   - {fileID: 2025100941105487704}
   _sceneCamera: {fileID: 0}
   _remoteLayerName: RemotePlayer
+  _dontDrawLayerName: DontDraw
+  _playerGraphics: {fileID: 3228119755161670917}
+  _playerUIPrefab: {fileID: 6031906256682199789, guid: 322db69855967544397b08d3f1644875, type: 3}
 --- !u!114 &-6992778936416602046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1561,3 +1565,22 @@ MonoBehaviour:
   - {fileID: 3228119755323648911}
   - {fileID: 2025100941105487704}
   _wasEnabled: 
+--- !u!95 &8931813194119825467
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3228119755323648910}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

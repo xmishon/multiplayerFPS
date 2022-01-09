@@ -19,6 +19,11 @@ namespace PlayerNS
         [SerializeField] private Behaviour[] _componentsToDisable;
         [SerializeField] private Camera _sceneCamera;
         [SerializeField] private string _remoteLayerName = "RemotePlayer";
+        [SerializeField] private string _dontDrawLayerName = "DontDraw";
+        [SerializeField] GameObject _playerGraphics;
+        [SerializeField] private GameObject _playerUIPrefab;
+
+        private GameObject _playerUIInstance;
 
         #endregion
 
@@ -54,13 +59,28 @@ namespace PlayerNS
                 {
                     _sceneCamera.gameObject.SetActive(false);
                 }
+                SetLayerRecursively(_playerGraphics, LayerMask.NameToLayer(_dontDrawLayerName));
+
+                _playerUIInstance = Instantiate(_playerUIPrefab);
+                _playerUIInstance.name = _playerUIPrefab.name;
             }
 
             GetComponent<Player>().Setup();
         }
 
+        private void SetLayerRecursively(GameObject obj, int newLayer)
+        {
+            obj.layer = newLayer;
+            foreach(Transform child in obj.transform)
+            {
+                SetLayerRecursively(child.gameObject, newLayer);
+            }
+        }
+
         private void OnDisable()
         {
+            Destroy(_playerUIInstance);
+
             if (_sceneCamera != null)
             {
                 _sceneCamera.gameObject.SetActive(true);

@@ -21,7 +21,6 @@ namespace PlayerNS
         [SerializeField] private float _thrusterForce = 1000.0f;
 
         [Header("Spring settings")]
-        [SerializeField] private JointDriveMode _jointMode = JointDriveMode.Position;
         [SerializeField] private float _jointSpring = 1400.0f;
         [SerializeField] private float _jointMaxForice = 3000.0f;
 
@@ -86,7 +85,6 @@ namespace PlayerNS
         private void SetJointSettings(float jointSpring)
         {
             _joint.yDrive = new JointDrive { 
-                mode = _jointMode,
                 positionSpring = _jointSpring,
                 maximumForce = _jointMaxForice
             };

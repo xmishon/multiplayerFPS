@@ -17,6 +17,9 @@ namespace PlayerNS
 
         [SerializeField] private Camera _camera;
         [SerializeField] private LayerMask _layerMask;
+        [SerializeField] private PlayerWeapon _weapon;
+        [SerializeField] private GameObject _weaponGraphics;
+        [SerializeField] private string _weaponLayerName = "Weapon";
 
         private const string PLAYER_TAG = "Player";
 
@@ -39,6 +42,8 @@ namespace PlayerNS
                 Debug.LogError("PlayerShoot: No camera referenced!");
                 this.enabled = false;
             }
+            if(isLocalPlayer)
+                _weaponGraphics.layer = LayerMask.NameToLayer(_weaponLayerName);
         }
 
         private void Update()
