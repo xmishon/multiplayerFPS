@@ -5,6 +5,7 @@ using Game;
 
 namespace PlayerNS
 {
+    [RequireComponent(typeof(PlayerSetup))]
     class Player : NetworkBehaviour
     {
         #region publicFields
@@ -22,7 +23,12 @@ namespace PlayerNS
 
         [SerializeField] private int _maxHealth = 100;
         [SerializeField] private Behaviour[] _disabledOnDeath;
+        [SerializeField] private GameObject[] _disableGameObjectsOnDeath;
         [SerializeField] private bool[] _wasEnabled;
+        [SerializeField] private GameObject _deathEffect;
+        [SerializeField] private GameObject _spawnEffect;
+
+        private bool isFirstSetup = true;
 
         [SyncVar] private int _currentHealth;
         [SyncVar] private bool _isDead = false;
@@ -32,15 +38,19 @@ namespace PlayerNS
 
         #region pulbicMethods
 
-        public void Setup()
+        public void SetupPlayer()
         {
-            _wasEnabled = new bool[_disabledOnDeath.Length];
-            for (int i = 0; i < _wasEnabled.Length; i++)
+            if (isLocalPlayer)
             {
-                _wasEnabled[i] = _disabledOnDeath[i].enabled;
+                // Switching on a scene camera
+                GameManager.instance.SetSceneCameraActive(false);
+                GetComponent<PlayerSetup>().playerUIInstance.SetActive(true);
             }
-            SetDefaults();
+
+            CmdBroadcastNewPlayerSetup();
         }
+
+
 
         public void SetDefaults()
         {
@@ -50,12 +60,26 @@ namespace PlayerNS
             {
                 _disabledOnDeath[i].enabled = _wasEnabled[i];
             }
+            for (int i = 0; i < _disableGameObjectsOnDeath.Length; i++)
+            {
+                _disableGameObjectsOnDeath[i].SetActive(true);
+            }
+            // Turn off a scene camera
+            if (isLocalPlayer)
+            {
+                GameManager.instance.SetSceneCameraActive(false);
+                GetComponent<PlayerSetup>().playerUIInstance.SetActive(true);
+            }
 
             Collider col = GetComponent<Collider>();
             if (col != null)
             {
                 col.enabled = true;
             }
+
+            // Create spawn effect
+            GameObject graphicInstance = Instantiate(_spawnEffect, transform.position, Quaternion.identity);
+            Destroy(graphicInstance, 3.0f);
         }
 
         [ClientRpc]
@@ -86,10 +110,25 @@ namespace PlayerNS
             {
                 _disabledOnDeath[i].enabled = false;
             }
+
+            for (int i = 0; i < _disableGameObjectsOnDeath.Length; i++)
+            {
+                _disableGameObjectsOnDeath[i].SetActive(false);
+            }
+
             Collider col = GetComponent<Collider>();
             if (col != null)
             {
                 col.enabled = false;
+            }
+
+            GameObject graphicInstance = Instantiate(_deathEffect, transform.position, Quaternion.identity);
+            Destroy(graphicInstance, 3.0f);
+
+            if (isLocalPlayer)
+            {
+                GameManager.instance.SetSceneCameraActive(true);
+                GetComponent<PlayerSetup>().playerUIInstance.SetActive(false);
             }
 
             StartCoroutine(Respawn());
@@ -99,10 +138,14 @@ namespace PlayerNS
         {
             yield return new WaitForSeconds(GameManager.instance.matchSettings.respawnTime);
 
-            SetDefaults();
             Transform spawnPoint = NetworkManager.singleton.GetStartPosition();
             transform.position = spawnPoint.position;
             transform.rotation = spawnPoint.rotation;
+
+            // Delay for respawn to let all the clients to recieve new position of a player
+            yield return new WaitForSeconds(0.2f);
+
+            SetupPlayer();
         }
 
         private void Update()
@@ -115,6 +158,27 @@ namespace PlayerNS
             {
                 RpcTakeDamage(9999);
             }
+        }
+
+        [Command]
+        private void CmdBroadcastNewPlayerSetup()
+        {
+            RpcSetupPlayerOnAllClients();
+        }
+
+        [ClientRpc]
+        private void RpcSetupPlayerOnAllClients()
+        {
+            if (isFirstSetup)
+            {
+                _wasEnabled = new bool[_disabledOnDeath.Length];
+                for (int i = 0; i < _wasEnabled.Length; i++)
+                {
+                    _wasEnabled[i] = _disabledOnDeath[i].enabled;
+                }
+                isFirstSetup = false;
+            }
+            SetDefaults();
         }
 
         #endregion

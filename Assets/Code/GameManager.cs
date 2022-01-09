@@ -19,6 +19,8 @@ namespace Game
 
         private const string PLAYER_ID_PREFIX = "Player ";
 
+        [SerializeField] private GameObject _sceneCamera;
+
         private static Dictionary<string, Player> players = new Dictionary<string, Player>();
 
         #endregion
@@ -41,6 +43,15 @@ namespace Game
         public static Player GetPlayer(string playerID)
         {
             return players[playerID];
+        }
+
+        public void SetSceneCameraActive(bool isActive)
+        {
+            if (_sceneCamera == null)
+            {
+                return;
+            }
+            _sceneCamera.SetActive(isActive);
         }
 
         #endregion

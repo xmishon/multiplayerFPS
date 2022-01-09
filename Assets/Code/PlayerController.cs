@@ -20,20 +20,31 @@ namespace PlayerNS
         [SerializeField] private float _mouseSensitivity = 3.0f;
         [SerializeField] private float _thrusterForce = 1000.0f;
 
+        [SerializeField] private float _thrusterFuelBurnSpeed = 1.0f;
+        [SerializeField] private float _thrusterFueldRegenerationSpeed = 0.5f;
+        [SerializeField] private LayerMask _environmentMask;
+
         [Header("Spring settings")]
         [SerializeField] private float _jointSpring = 1400.0f;
         [SerializeField] private float _jointMaxForice = 3000.0f;
 
+        [Header("Костыли")]
+        [SerializeField] private float _verticalOffsetPosition = 1.0f;
+
         private PlayerMotor _motor;
         private ConfigurableJoint _joint;
         private Animator _animator;
+        private float _thrusterFuelAmount = 1.0f;
 
         #endregion
 
 
         #region pulbicMethods
 
-
+        public float GetThrusterFuelAmount()
+        {
+            return _thrusterFuelAmount;
+        }
 
         #endregion
 
@@ -50,6 +61,17 @@ namespace PlayerNS
 
         private void Update()
         {
+            // Update a spring joint target position
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, Vector3.down, out hit, 100.0f, _environmentMask))
+            {
+                _joint.targetPosition = new Vector3(0.0f, -hit.point.y + _verticalOffsetPosition, 0.0f);
+            }
+            else
+            {
+                _joint.targetPosition = new Vector3(0.0f, 0.0f, 0.0f);
+            }
+
             float xMove = Input.GetAxis("Horizontal");
             float zMove = Input.GetAxis("Vertical");
             Vector3 moveHorizontal = transform.right * xMove;
@@ -68,15 +90,24 @@ namespace PlayerNS
             _motor.RotateCamera(cameraRotationX);
 
             Vector3 thrusterForce = Vector3.zero;
-            if (Input.GetButton("Jump"))
+            if (Input.GetButton("Jump") && _thrusterFuelAmount > 0)
             {
-                thrusterForce = Vector3.up * _thrusterForce;
-                SetJointSettings(0.0f);
+                _thrusterFuelAmount -= _thrusterFuelBurnSpeed * Time.deltaTime;
+
+                if(_thrusterFuelAmount >= 0.05f)
+                {
+                    thrusterForce = Vector3.up * _thrusterForce;
+                    SetJointSettings(0.0f);
+                }
             }
             else
             {
+                _thrusterFuelAmount += _thrusterFueldRegenerationSpeed * Time.deltaTime;
                 SetJointSettings(_jointSpring);
             }
+
+            _thrusterFuelAmount = Mathf.Clamp(_thrusterFuelAmount, 0.0f, 1.0f);
+
             // Apply the thruster force (thrust - толкать)
             _motor.ApplyThruster(thrusterForce);
 

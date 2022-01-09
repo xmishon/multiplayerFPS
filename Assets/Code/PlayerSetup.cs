@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using Game;
+using UI;
 using UnityEngine.Networking;
 
 namespace PlayerNS
 {
     [RequireComponent(typeof(Player))]
+    [RequireComponent(typeof(PlayerController))]
     class PlayerSetup : NetworkBehaviour
     {
         #region publicFields
@@ -17,13 +19,13 @@ namespace PlayerNS
         #region privateFields
 
         [SerializeField] private Behaviour[] _componentsToDisable;
-        [SerializeField] private Camera _sceneCamera;
         [SerializeField] private string _remoteLayerName = "RemotePlayer";
         [SerializeField] private string _dontDrawLayerName = "DontDraw";
         [SerializeField] GameObject _playerGraphics;
         [SerializeField] private GameObject _playerUIPrefab;
 
-        private GameObject _playerUIInstance;
+        [HideInInspector]
+        public GameObject playerUIInstance;
 
         #endregion
 
@@ -54,36 +56,28 @@ namespace PlayerNS
             }
             else
             {
-                _sceneCamera = Camera.main;
-                if(_sceneCamera != null)
+                Utils.Util.SetLayerRecursively(_playerGraphics, LayerMask.NameToLayer(_dontDrawLayerName));
+
+                // UI
+                playerUIInstance = Instantiate(_playerUIPrefab);
+                playerUIInstance.name = _playerUIPrefab.name;
+                PlayerUI ui = playerUIInstance.GetComponent<PlayerUI>();
+                if (ui == null)
                 {
-                    _sceneCamera.gameObject.SetActive(false);
+                    Debug.LogError("No PlayerUI component on PlayerUI prefab.");
                 }
-                SetLayerRecursively(_playerGraphics, LayerMask.NameToLayer(_dontDrawLayerName));
+                ui.SetController(GetComponent<PlayerController>());
 
-                _playerUIInstance = Instantiate(_playerUIPrefab);
-                _playerUIInstance.name = _playerUIPrefab.name;
-            }
-
-            GetComponent<Player>().Setup();
-        }
-
-        private void SetLayerRecursively(GameObject obj, int newLayer)
-        {
-            obj.layer = newLayer;
-            foreach(Transform child in obj.transform)
-            {
-                SetLayerRecursively(child.gameObject, newLayer);
+                GetComponent<Player>().SetupPlayer();
             }
         }
 
         private void OnDisable()
         {
-            Destroy(_playerUIInstance);
-
-            if (_sceneCamera != null)
+            Destroy(playerUIInstance);
+            if (isLocalPlayer)
             {
-                _sceneCamera.gameObject.SetActive(true);
+                GameManager.instance.SetSceneCameraActive(true);
             }
             GameManager.UnregisterPlayer(transform.name);
         }
