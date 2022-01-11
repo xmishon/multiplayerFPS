@@ -11,6 +11,7 @@ namespace Game
         #region publicFields
         public static GameManager instance;
         public MatchSettings matchSettings;
+        public static Dictionary<string, Player> players = new Dictionary<string, Player>();
 
         #endregion
 
@@ -21,7 +22,6 @@ namespace Game
 
         [SerializeField] private GameObject _sceneCamera;
 
-        private static Dictionary<string, Player> players = new Dictionary<string, Player>();
 
         #endregion
 

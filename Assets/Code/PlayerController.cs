@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game;
+using UnityEngine;
 
 namespace PlayerNS
 {
@@ -24,6 +25,9 @@ namespace PlayerNS
         [SerializeField] private float _thrusterFueldRegenerationSpeed = 0.5f;
         [SerializeField] private LayerMask _environmentMask;
 
+        [SerializeField] private Vector3 _playerNameLabelOffset = new Vector3(0.0f, 0.0f, 0.0f);
+        [SerializeField] private float _playerNameLabelDistance = 15.0f;
+
         [Header("Spring settings")]
         [SerializeField] private float _jointSpring = 1400.0f;
         [SerializeField] private float _jointMaxForice = 3000.0f;
@@ -35,6 +39,8 @@ namespace PlayerNS
         private ConfigurableJoint _joint;
         private Animator _animator;
         private float _thrusterFuelAmount = 1.0f;
+        private Rect _playerNameLabelRect = new Rect(0, 0, 300, 100);
+        private float _playerNameLabelSqrDistance;
 
         #endregion
 
@@ -57,6 +63,7 @@ namespace PlayerNS
             _joint = GetComponent<ConfigurableJoint>();
             _animator = GetComponent<Animator>();
             SetJointSettings(_jointSpring);
+            _playerNameLabelSqrDistance = _playerNameLabelDistance * _playerNameLabelDistance;
         }
 
         private void Update()
@@ -111,6 +118,33 @@ namespace PlayerNS
             // Apply the thruster force (thrust - толкать)
             _motor.ApplyThruster(thrusterForce);
 
+        }
+
+        private void OnGUI()
+        {
+            DisplayPlayerNames();
+        }
+
+        private void DisplayPlayerNames()
+        {
+            foreach (var pair in GameManager.players)
+            {
+                Player player = pair.Value;
+                if (player.isLocalPlayer)
+                    continue;
+                Vector3 distance = player.transform.position - transform.position;
+                Vector3 direction = player.transform.position + _playerNameLabelOffset;
+                if (distance.sqrMagnitude < _playerNameLabelSqrDistance)
+                {
+                    Vector3 screenPoint = _motor._camera.WorldToScreenPoint(direction);
+                    if (screenPoint.z < 0)
+                        continue;
+                    _playerNameLabelRect.x = screenPoint.x;
+                    _playerNameLabelRect.y = Screen.height - screenPoint.y;
+                    //Rect rect = new Rect(new Vector2(screenPoint.x, Screen.height - screenPoint.y), new Vector2(10, player.playerName.Length * 10.5f));
+                    GUI.Label(_playerNameLabelRect, player.playerName);
+                }
+            }
         }
 
         private void SetJointSettings(float jointSpring)

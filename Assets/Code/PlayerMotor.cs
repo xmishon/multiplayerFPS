@@ -5,7 +5,7 @@ namespace PlayerNS
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerMotor : MonoBehaviour
     {
-        [SerializeField] private Camera _camera;
+        public Camera _camera;
         [SerializeField] private float _cameraRotationLimit = 85.0f;
 
         private Vector3 _velocity = Vector3.zero;

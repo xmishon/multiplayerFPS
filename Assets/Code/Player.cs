@@ -16,6 +16,8 @@ namespace PlayerNS
             protected set { _isDead = value; }
         }
 
+        [SyncVar] public string playerName;
+
         #endregion
 
 
@@ -46,8 +48,8 @@ namespace PlayerNS
                 GameManager.instance.SetSceneCameraActive(false);
                 GetComponent<PlayerSetup>().playerUIInstance.SetActive(true);
             }
-
-            CmdBroadcastNewPlayerSetup();
+            
+            CmdBroadcastNewPlayerSetup(FindObjectOfType<PlayerNameOverScene>().PlayerName);
         }
 
 
@@ -161,13 +163,13 @@ namespace PlayerNS
         }
 
         [Command]
-        private void CmdBroadcastNewPlayerSetup()
+        private void CmdBroadcastNewPlayerSetup(string playerName)
         {
-            RpcSetupPlayerOnAllClients();
+            RpcSetupPlayerOnAllClients(playerName);
         }
 
         [ClientRpc]
-        private void RpcSetupPlayerOnAllClients()
+        private void RpcSetupPlayerOnAllClients(string playerName)
         {
             if (isFirstSetup)
             {
@@ -176,6 +178,7 @@ namespace PlayerNS
                 {
                     _wasEnabled[i] = _disabledOnDeath[i].enabled;
                 }
+                this.playerName = playerName;
                 isFirstSetup = false;
             }
             SetDefaults();
