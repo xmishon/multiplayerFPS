@@ -572,6 +572,27 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 380700707736212608, guid: 442963f3cdb859e45a4b970a5f6e4a95,
+        type: 3}
+      propertyPath: m_SpawnPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 380700707736212608, guid: 442963f3cdb859e45a4b970a5f6e4a95,
+        type: 3}
+      propertyPath: matchName
+      value: xmishon17
+      objectReference: {fileID: 0}
+    - target: {fileID: 380700707736212608, guid: 442963f3cdb859e45a4b970a5f6e4a95,
+        type: 3}
+      propertyPath: matchSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 380700707736212608, guid: 442963f3cdb859e45a4b970a5f6e4a95,
+        type: 3}
+      propertyPath: m_SpawnPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 7511942074829028145, guid: 4b4f450076b5625459013f70f685ff6d,
+        type: 3}
     - target: {fileID: 3922254359025800018, guid: 442963f3cdb859e45a4b970a5f6e4a95,
         type: 3}
       propertyPath: m_LocalPosition.x

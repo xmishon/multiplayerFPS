@@ -63,6 +63,7 @@ namespace Weapon
             if (isLocalPlayer)
             {
                 Util.SetLayerRecursively(weaponInstance, LayerMask.NameToLayer(_weaponLayerName));
+                _currentGraphics.muzzleFlash.gameObject.layer = LayerMask.NameToLayer("Default");
             }
         }
 

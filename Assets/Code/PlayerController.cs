@@ -64,6 +64,7 @@ namespace PlayerNS
             _animator = GetComponent<Animator>();
             SetJointSettings(_jointSpring);
             _playerNameLabelSqrDistance = _playerNameLabelDistance * _playerNameLabelDistance;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void Update()

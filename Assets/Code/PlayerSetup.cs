@@ -67,6 +67,7 @@ namespace PlayerNS
                     Debug.LogError("No PlayerUI component on PlayerUI prefab.");
                 }
                 ui.SetController(GetComponent<PlayerController>());
+                ui.SetPlayer(GetComponent<Player>());
 
                 GetComponent<Player>().SetupPlayer();
             }
@@ -80,6 +81,7 @@ namespace PlayerNS
                 GameManager.instance.SetSceneCameraActive(true);
             }
             GameManager.UnregisterPlayer(transform.name);
+            Cursor.lockState = CursorLockMode.None;
         }
 
         private void DisableComponents()

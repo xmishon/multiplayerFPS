@@ -17,6 +17,7 @@ namespace PlayerNS
         }
 
         [SyncVar] public string playerName;
+        [SyncVar] public int points;
 
         #endregion
 
@@ -99,6 +100,11 @@ namespace PlayerNS
             }
         }
 
+        public void IncreasePoints()
+        {
+            points++;
+        }
+
         #endregion
 
 
@@ -179,6 +185,7 @@ namespace PlayerNS
                     _wasEnabled[i] = _disabledOnDeath[i].enabled;
                 }
                 this.playerName = playerName;
+                points = 0;
                 isFirstSetup = false;
             }
             SetDefaults();
